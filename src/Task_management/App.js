@@ -1,7 +1,7 @@
 import {useState} from "react"
 import React from 'react'
 import Header from './Header'
-import style from './style.module.css'
+import './custom_styles.css'
 import Tasks from './Tasks'
 import AddTask from './AddTask'
 
@@ -24,6 +24,8 @@ export default function App() {
         },
     ])
 
+    const [selectedTask, setSelectedTask] = useState({})
+
     //Add task
     const addTask = (task) => {
         const id = Math.floor(Math.random() * 10000) + 1
@@ -39,16 +41,40 @@ export default function App() {
     //Edit Task
     const editTask = (id) => {
         const showTask = tasks.find((task) => task.id === id)
-        //settoggleSubmit(false)
-        //setText(showTask.text)
-        //setDay(showTask.day)
-        console.log(id)
+        console.log(showTask)
+        setSelectedTask(showTask);
+    }
+
+    const arr = [1, 2, 3]
+
+    /*
+    1 ->
+    2 ->
+    3 ->
+    */
+
+    const newArr = arr.map(function (e){
+        return e === 2 ? e : e * 2 ;
+    })
+
+    console.log(JSON.stringify(newArr));
+
+    const onEditCompleted = (id, text, day) => {
+
+        const newTasks = tasks.map(function (e) {
+                return e.id === id ?
+                    {id, text, day} : e
+            }
+        )
+
+        setTasks(newTasks)
+        setSelectedTask({})
     }
 
     return (
-        <div className={style.container}>
+        <div className="container">
             <Header/>
-            <AddTask onAdd={addTask}/>
+            <AddTask onEdit={onEditCompleted} task={selectedTask} onAdd={addTask}/>
             {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onEdit={editTask}/> : ('No Task')}
         </div>
     )

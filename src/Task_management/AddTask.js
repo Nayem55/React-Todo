@@ -1,57 +1,51 @@
-import style from'./style.module.css'
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
+import './custom_styles.css'
 
-const AddTask = ({onAdd,onEdit}) => {
-   
-    const [text,setText]= useState('')
-    const [day,setDay]= useState('')
-    const [toggleSubmit,settoggleSubmit]=useState(true) 
-   
-  
-   
+const AddTask = ({onAdd, onEdit, task}) => {
+    const editMode = Object.keys(task).length !== 0
 
-const onSubmit =(e)=>{
+    const [text, setText] = useState(editMode ? task.text : '')
+    const [day, setDay] = useState(editMode ? task.day : '')
+    const [toggleSubmit, setToggleSubmit] = useState(true)
+
+    useEffect(()=>{
+        if (editMode){
+            setText(task.text);
+            setDay(task.day);
+        }
+    }, [task])
+
+    const onSubmit = (e) => {
         e.preventDefault()
 
-        if(!text){
+        if (!text) {
             alert('Please add a task')
             return
         }
 
-        onAdd({text , day})
-      
-        
-       
-
+        if (editMode) onEdit(task.id, text, day)
+        else onAdd({text, day})
 
         setText('')
         setDay('')
-        
-     
-        
     }
-  
 
     return (
-        <form className={style.addform} onSubmit={onSubmit}>
-            <div className={style.formcontrol}>
+        <form className="addform" onSubmit={onSubmit}>
+            <div className="formcontrol">
                 <label>Tasks</label>
-                <input type='text' placeholder='Add Task' value={text} onChange={(e)=>setText(e.target.value)} />
-
+                <input type='text' placeholder='Add Task' value={text} onChange={(e) => setText(e.target.value)}/>
             </div>
-            <div  className={style.formcontrol}>
+            <div className="formcontrol">
                 <label>Day & time</label>
-                <input type='text' placeholder='Day & time'  value={day} onChange={(e)=>setDay(e.target.value)}/>
-
+                <input type='text' placeholder='Day & time' value={day} onChange={(e) => setDay(e.target.value)}/>
             </div>
-           
-        {
-            toggleSubmit ? 
-            <input type='submit' value='Save Task' className={style.btn , style.btnblock} />  : <input type='submit' value='Edit Task' className={style.btn , style.btnblock} />  
 
-
-        }
-            
+            {
+                toggleSubmit ?
+                    <input type='submit' value='Save Task' className="btn btnblock"/> :
+                    <input type='submit' value='Edit Task' className="btn btnblock"/>
+            }
         </form>
     )
 }

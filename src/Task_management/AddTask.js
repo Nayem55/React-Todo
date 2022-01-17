@@ -1,19 +1,20 @@
 import {useEffect, useState} from 'react';
 import './custom_styles.css'
 
-const AddTask = ({onAdd, onEdit, task}) => {
-    const editMode = Object.keys(task).length !== 0
+const AddTask = ({onAdd, onEdit, selectedTask}) => {
+    const editMode = Object.keys(selectedTask).length !== 0
 
-    const [text, setText] = useState(editMode ? task.text : '')
-    const [day, setDay] = useState(editMode ? task.day : '')
+    const [text, setText] = useState('')
+    const [day, setDay] = useState('')
     const [toggleSubmit, setToggleSubmit] = useState(true)
 
     useEffect(()=>{
         if (editMode){
-            setText(task.text);
-            setDay(task.day);
+            setText(selectedTask.text);
+            setDay(selectedTask.day);
+            setToggleSubmit(false)
         }
-    }, [task])
+    }, [selectedTask])
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -23,11 +24,12 @@ const AddTask = ({onAdd, onEdit, task}) => {
             return
         }
 
-        if (editMode) onEdit(task.id, text, day)
+        if (editMode) onEdit(selectedTask.id, text, day)
         else onAdd({text, day})
 
         setText('')
         setDay('')
+        setToggleSubmit(true)
     }
 
     return (
@@ -44,7 +46,7 @@ const AddTask = ({onAdd, onEdit, task}) => {
             {
                 toggleSubmit ?
                     <input type='submit' value='Save Task' className="btn btnblock"/> :
-                    <input type='submit' value='Edit Task' className="btn btnblock"/>
+                    <input type='submit' value='Edit Task' className="btn btnblock" style={{backgroundColor:'red'}}/>
             }
         </form>
     )

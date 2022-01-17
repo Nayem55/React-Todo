@@ -45,20 +45,6 @@ export default function App() {
         setSelectedTask(showTask);
     }
 
-    const arr = [1, 2, 3]
-
-    /*
-    1 ->
-    2 ->
-    3 ->
-    */
-
-    const newArr = arr.map(function (e){
-        return e === 2 ? e : e * 2 ;
-    })
-
-    console.log(JSON.stringify(newArr));
-
     const onEditCompleted = (id, text, day) => {
 
         const newTasks = tasks.map(function (e) {
@@ -74,7 +60,7 @@ export default function App() {
     return (
         <div className="container">
             <Header/>
-            <AddTask onEdit={onEditCompleted} task={selectedTask} onAdd={addTask}/>
+            <AddTask onEdit={onEditCompleted} selectedTask={selectedTask} onAdd={addTask}/>
             {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onEdit={editTask}/> : ('No Task')}
         </div>
     )
